@@ -1,17 +1,21 @@
 // "use client"
-'server-only'
+// 'server-only'
 
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { auth } from "@clerk/nextjs/server";
-import { UserButton } from "@clerk/nextjs";
-// import { getRole } from "@/utils/roles";
+// import { UserButton } from "@clerk/nextjs";
+import { getRole } from "@/utils/roles";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const { userId } = await auth();
+  const role = await getRole();
 
-  console.log(userId)
+  if (userId && role) {
+    redirect(`/${role}`);
+  }
+  // console.log(userId)
 
   return (
     <div className="flex flex-col items-center justify-center h-screen p-6">
@@ -34,11 +38,11 @@ export default async function Home() {
         <div className="flex gap-4">
           {userId ? (
             <>
-              {/* <Link href={`/${role}`}> */}
-              <Link href='/sign-up'>
+              <Link href={`/${role}`}>
+              {/* <Link href='/sign-up'> */}
                 <Button>View Dashboard</Button>
               </Link>
-              <UserButton />
+              {/* <UserButton /> */}
             </>
           ) : ( 
             <>
